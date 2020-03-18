@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Diagnostics;
 using Sitecore.ExperienceForms.Constants;
@@ -57,6 +58,11 @@ namespace Sitecore.Support.ExperienceForms.Mvc.Controllers
         [SetFormMode(Editing = false)]
         public ActionResult Index()
         {
+            if (!string.IsNullOrEmpty(HttpContext.Request.QueryString["fxb.FormItemId"]) || 
+                !string.IsNullOrEmpty(HttpContext.Request.QueryString["fxb.HtmlPrefix"]))
+            {
+                HttpContext.Response.Redirect(Settings.ItemNotFoundUrl);
+            }
             FormRenderingContext.SessionId = ID.NewID.ToClientIdString();
             return RenderForm(FormRenderingContext.RenderingFormId);
         }
